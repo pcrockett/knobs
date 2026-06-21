@@ -1,0 +1,81 @@
+#!/usr/bin/env nu
+
+let XDG_CONFIG_HOME = $env.XDG_CONFIG_HOME? | default $"($env.HOME)/.config"
+let KNOBS_CONFIG_HOME = $"($XDG_CONFIG_HOME)/knobs"
+
+# Interactively select and execute scripts
+def main [] {
+  const SELF = path self
+  ^$SELF --help
+}
+
+# List knobsets
+def "main list" [] {
+  mkdir $KNOBS_CONFIG_HOME
+  (
+    ls $KNOBS_CONFIG_HOME
+    | where { $in.type == dir }
+    | each { $in.name | path basename | print }
+    | ignore
+  )
+}
+
+# Run scripts in a knobset
+def "main run" [knobset: string] {
+  let knobset_dir = $"($KNOBS_CONFIG_HOME)/($knobset)"
+  if not ($knobset_dir | path exists) {
+    error make { msg: $"Does not exist: ($knobset_dir)" }
+  }
+
+  let scripts = (
+    ls $knobset_dir --long
+    | where { $in.mode | str contains "x" }
+    | each { $in.name }
+  )
+
+  let to_exec = (
+    $scripts
+    | each {|path|
+      # colon-delimited fields:
+      #
+      # 1: script name
+      # 2: full script path
+      #
+      $"($path | path basename):($path)"
+    }
+    | str join "\n"
+    | fzf --multi
+      --delimiter ":"
+      --with-nth "{1}"
+      --accept-nth "{2}"
+      --preview "bat --color=always {2}"
+      --preview-window "right,70%"
+    | lines
+  )
+
+  if ($to_exec | length) == 0 {
+    return
+  }
+
+  let with_statuses = (
+    $to_exec
+    | each {|script_path|
+      [
+        $"echo '($script_path)...'"
+        $script_path
+      ]
+    }
+    | flatten
+  )
+
+  let script = (
+    "set -euo pipefail"
+    | append "__KNOBS_MAIN__() {"
+    | append $with_statuses
+    | append "}"
+    | append "__KNOBS_MAIN__"
+    | str join "\n"
+  )
+
+  exec bash -c $script
+}
