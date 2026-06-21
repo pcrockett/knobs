@@ -11,17 +11,28 @@ def main [] {
 
 # List knobsets
 def "main list" [] {
-  mkdir $KNOBS_CONFIG_HOME
-  (
-    ls $KNOBS_CONFIG_HOME
-    | where { $in.type == dir }
-    | each { $in.name | path basename | print }
-    | ignore
-  )
+  get-knobsets | each { print }
+  ignore
 }
 
 # Run scripts in a knobset
-def "main run" [knobset: string] {
+def "main run" [knobset?: string] {
+
+  let knobset = if ($knobset | is-empty) {
+    let available = get-knobsets
+    if ($available | is-empty) {
+      error make { msg: $"No knobsets found in ($KNOBS_CONFIG_HOME)" }
+    }
+
+    (
+      $available
+      | str join "\n"
+      | ^fzf --prompt "select knobset: " --height 10%
+    )
+  } else {
+    $knobset
+  }
+
   let knobset_dir = $"($KNOBS_CONFIG_HOME)/($knobset)"
   if not ($knobset_dir | path exists) {
     error make { msg: $"Does not exist: ($knobset_dir)" }
@@ -80,4 +91,13 @@ def "main run" [knobset: string] {
   )
 
   exec bash -c $script
+}
+
+def get-knobsets []: nothing -> list<string> {
+  mkdir $KNOBS_CONFIG_HOME
+  (
+    ls $KNOBS_CONFIG_HOME
+    | where { $in.type == dir }
+    | each { $in.name | path basename }
+  )
 }
