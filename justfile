@@ -8,4 +8,5 @@ lint:
 
 # Install knobs
 install PREFIX="~/.local/bin":
+    mkdir --parent {{PREFIX}}
     cp knobs {{PREFIX}}
