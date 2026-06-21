@@ -54,3 +54,4 @@ all must be installed for `knobs` to work.
 - install the dependencies
 - download [the script](./knobs)
 - make it executable (`chmod +x knobs`) and place is somewhere on your `$PATH`
+- run `knobs init`

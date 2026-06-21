@@ -9,6 +9,25 @@ def main [] {
   ^$SELF --help
 }
 
+# Generate an example knobset
+def "main init" [] {
+  let knobset_dir = $"($KNOBS_CONFIG_HOME)/example"
+  if ($knobset_dir | path exists) {
+    error make { msg: $"Already exists: ($knobset_dir)" }
+  }
+  mkdir $knobset_dir
+  "#!/usr/bin/env bash
+set -euo pipefail
+echo 'this is an example knob'
+" | save --raw $"($knobset_dir)/50_example.sh"
+  ^chmod +x $"($knobset_dir)/50_example.sh"
+  $"
+(ansi green)Created example knobset: ($knobset_dir)
+Add more knobs to it by dropping more scripts in that directory.
+Execute the scripts with `knobs run`.(ansi reset)
+" | print
+}
+
 # List knobsets
 def "main list" [] {
   get-knobsets | each { print }
