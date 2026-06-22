@@ -52,6 +52,6 @@ all must be installed for `knobs` to work.
 ## getting started
 
 - install the dependencies
-- download [the script](./knobs)
+- download the script from [releases](https://github.com/pcrockett/knobs/releases)
 - make it executable (`chmod +x knobs`) and place is somewhere on your `$PATH`
 - run `knobs init`

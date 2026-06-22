@@ -10,3 +10,11 @@ lint:
 install PREFIX="~/.local/bin":
     mkdir --parent {{PREFIX}}
     cp knobs {{PREFIX}}
+
+# Draft a GitHub release
+release:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    version="$(./knobs version)"
+    git fetch origin --prune-tags
+    gh release create "v${version}" --draft --generate-notes knobs
