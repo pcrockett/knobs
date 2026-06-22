@@ -46,7 +46,7 @@ def "main run" [knobset?: string] {
     (
       $available
       | str join "\n"
-      | ^fzf --prompt "select knobset: " --height 10%
+      | ^fzf --prompt "select knobset: " --height "~100%"
     )
   } else {
     $knobset
