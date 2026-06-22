@@ -107,7 +107,7 @@ def "main run" [knobset?: string] {
       let escaped = ^printf "%q" $script_path
       [
         $"printf '%s%s...%s\n' '(ansi dark_gray)' ($escaped) '(ansi reset)'"
-        $script_path
+        $escaped
       ]
     }
     | flatten
