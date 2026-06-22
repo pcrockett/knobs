@@ -87,6 +87,11 @@ def "main run" [knobset?: string] {
       --height "50%"
       --min-height 10
       --reverse
+      --header "SELECT KNOBS"
+      --header-first
+      --footer "use tab / shift+tab"
+      --ghost "search / filter"
+      --no-info
       --bind "ctrl-a:select-all"
       --bind "alt-a:deselect-all"
     | lines
