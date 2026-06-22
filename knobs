@@ -120,7 +120,6 @@ def "main run" [knobset?: string] {
   )
 
   let script = (
-    "set -euo pipefail"
     | append "__KNOBS_MAIN__() {"
     | append $with_statuses
     | append "}"
