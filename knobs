@@ -2,7 +2,7 @@
 
 let XDG_CONFIG_HOME = $env.XDG_CONFIG_HOME? | default $"($env.HOME)/.config"
 let KNOBS_CONFIG_HOME = $"($XDG_CONFIG_HOME)/knobs"
-let KNOBS_VERSION = "0.0.1"
+let KNOBS_VERSION = "0.0.2"
 
 # Interactively select and execute scripts
 def main [] {
