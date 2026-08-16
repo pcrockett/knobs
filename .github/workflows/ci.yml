@@ -22,7 +22,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: taiki-e/install-action@bffeee26d4db9be238a4ea78d8826604ebcb594d  # v2.82.5
+      - uses: taiki-e/install-action@7f4eb899022d8fe70b20c4f3de697aa85c309026  # v2.85.11
         with:
           tool: just@1.51.0
 
